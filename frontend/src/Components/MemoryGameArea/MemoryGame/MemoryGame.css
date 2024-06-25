@@ -1,0 +1,10 @@
+.containerPlayingCard {
+    height: 625px;
+}
+
+@media screen and (max-width: 960px) {
+    .containerPlayingCard {
+        height: 380px;
+    }
+
+}

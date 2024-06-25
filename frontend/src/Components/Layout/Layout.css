@@ -1,0 +1,65 @@
+.LayOut {}
+
+header {
+    height: 9%;
+    width: 100%;
+}
+
+main {
+    height: 91%;
+    width: 100%;
+}
+
+.classToast{
+    width: 23vw !important;
+}
+
+#root {
+    width: 100%;
+    height: 100%;
+    margin: 0 auto;
+}
+
+*{
+    box-sizing: border-box !important;
+}
+
+.center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.full {
+    height: 100%;
+    width: 100%;
+}
+
+
+::-webkit-scrollbar {
+    width: 20px;
+}
+
+::-webkit-scrollbar-track {
+    background-color: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #d6dee1;
+    border-radius: 20px;
+    border: 6px solid transparent;
+    background-clip: content-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background-color: #a8bbbf;
+}
+
+
+.boxShadow {
+    box-shadow: 0 2px 1px -1px rgba(0, 0, 0, 0.2),
+        0 1px 1px 0 rgba(0, 0, 0, 0.14),
+        0 1px 3px 0 rgba(0, 0, 0, 0.12) !important;
+    border: 0px !important;
+}

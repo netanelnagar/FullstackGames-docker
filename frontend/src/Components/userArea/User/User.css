@@ -1,0 +1,36 @@
+.User {}
+
+/* PersonalArea.css */
+.personal-area-container {
+    display: flex;
+    justify-content: center;
+    /* align-items: center; */
+    overflow-y: scroll;
+}
+
+.personal-area-card {
+    width: 100%;
+    max-width: 500px;
+    padding: 2rem;
+    height: 700px;
+}
+
+.p-field {
+    margin-bottom: 1.5rem;
+}
+
+.p-field label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+}
+
+.p-avatar {
+    margin-bottom: 1.5rem;
+    height: 150px;
+    width: 150px;
+}
+
+/* .p-button {
+    width: 100%;
+} */
