@@ -14,6 +14,7 @@ import { authContext } from '../../../Context/authContext/authContext';
 
 export function Register(): JSX.Element {
     const [username, setUsername] = useState('');
+    const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [image, setImage] = useState<File | null>(null);
 
@@ -29,8 +30,9 @@ export function Register(): JSX.Element {
         formData.append("image", image as File);
         formData.append("username", username);
         formData.append("password", password);
+        formData.append("email", email);
         try {
-            
+
             const response = await axios.post(appConfig.register, formData, {
                 headers: {
                     "Content-Type": "multipart/form-data",
@@ -38,13 +40,17 @@ export function Register(): JSX.Element {
                     "x-rapidapi-key": "your-rapidapi-key-here",
                 },
             });
-            const user: { user: IUser, token?: string } = response.data;
-            toast?.current?.show({ severity: "success", summary: 'Success', detail: `successful register ${user.user.username}` });
-            userContext?.setUser({ ...user.user, token: user.token });
+            console.log(response)
+            const user: IUser = { ...response.data.user, token: response.data.token };
+            // toast?.current?.success(`successful register ${user.username}`);
+            toast?.current?.show({ severity: "success", summary: 'Success', detail: `successful register ${user.username}` });
+            userContext?.setUser(user);
+            sessionStorage.setItem('user', JSON.stringify({ ...user, lastConnection: Date.now() }));
             navigate('/gamesApp')
 
         } catch (error: AxiosError | any) {
-            console.log(error)
+            console.log(error);
+            // error.response.data && toast?.current?.error(`${error.response.data}`)
             error.response.data && toast?.current?.show({ severity: 'error', summary: 'Error', detail: `${error.response.data}` })
         }
     };
@@ -52,6 +58,7 @@ export function Register(): JSX.Element {
     const onImageUpload = (event: FileUploadSelectEvent) => {
         if (event.files && event.files[0]) {
             setImage(event.files[0]);
+            // toast?.current?.success( `Uploaded image ${event.files[0].name}`)
             toast?.current?.show({ severity: "success", summary: 'Success', detail: `Uploaded image ${event.files[0].name}` })
         }
     };
@@ -66,6 +73,17 @@ export function Register(): JSX.Element {
                             id="username"
                             value={username}
                             onChange={(e) => setUsername(e.target.value)}
+                            className="w-100"
+                            required
+                        />
+                    </div>
+                    <div className="mb-3">
+                        <label htmlFor="email" className="form-label">Email</label>
+                        <InputText
+                            id="email"
+                            value={email}
+                            type='email'
+                            onChange={(e) => setEmail(e.target.value)}
                             className="w-100"
                             required
                         />

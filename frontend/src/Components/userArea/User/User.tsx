@@ -12,12 +12,11 @@ import { FileUpload, FileUploadSelectEvent } from 'primereact/fileupload';
 import axios from 'axios';
 import toastContext from '../../../Context/ToastContext/ToastContext';
 import { appConfig } from '../../../config/appConfig';
+import { IUser } from '../../../Models/Models';
 
 interface UserInfo {
-    username: string;
-    email: string;
-    bio: string;
-    needToUpdate: string[];
+    username: string | undefined;
+    email: string | undefined;
 }
 
 export function User(): JSX.Element {
@@ -25,12 +24,9 @@ export function User(): JSX.Element {
     const userContext = useContext(authContext);
     const toast = useContext(toastContext);
     const navigate = useNavigate();
-
     const [userInfo, setUserInfo] = useState<UserInfo>({
-        username: 'John Doe',
-        email: 'john.doe@example.com',
-        bio: 'Software Developer',
-        needToUpdate: []
+        username: userContext?.user?.username,
+        email: userContext?.user?.email
     });
     const [isEditing, setIsEditing] = useState(false);
     const [image, setImage] = useState<File | null>(null);
@@ -42,27 +38,46 @@ export function User(): JSX.Element {
             <Button label="Yes" icon="pi pi-check" onClick={() => setVisible(false)} autoFocus />
         </div>
     );
+
     const handleEdit = () => {
         setIsEditing(true);
     };
 
     const handleSave = async () => {
+
         setIsEditing(false);
+        console.log(userInfo.username != userContext?.user?.username, userInfo.email != userContext?.user?.email)
+        if (userInfo.username === userContext?.user?.username
+            && userInfo.email === userContext?.user?.email && !image) {
+            return;
+        }
         const formData = new FormData();
         image && formData.append("image", image as File);
         formData.append("_id", userContext?.user?._id as string);
         if (userInfo.username !== userContext?.user?.username) {
-            formData.append("username", userInfo.username);
+            formData.append("username", userInfo.username as string);
         }
-        const response = await axios.patch(appConfig.updateProfile, formData, {
-            headers: {
-                "Content-Type": "multipart/form-data",
-                "x-rapidapi-host": "file-upload8.p.rapidapi.com",
-                "x-rapidapi-key": "your-rapidapi-key-here",
-            },
-        });
+        if (userInfo.email !== userContext?.user?.email) {
+            formData.append("email", userInfo.email as string);
+        }
+        try {
 
-        response.data === "success" && toast?.current?.show({ severity: "success", summary: 'Success', detail: `updated successful` });
+            const response = await axios.patch(appConfig.updateProfile, formData, {
+                headers: {
+                    "Authorization": "Bearer " + userContext?.user?.token,
+                    "Content-Type": "multipart/form-data",
+                    "x-rapidapi-host": "file-upload8.p.rapidapi.com",
+                    "x-rapidapi-key": "your-rapidapi-key-here",
+                },
+            });
+            const obj = response.data as { username?: string, email?: string, imageName?: string, _id: string };
+            console.log(obj, { ...userContext?.user, ...obj })
+            userContext?.setUser(prev => ({ ...prev as IUser, ...obj }));
+            // response.status === 201 && toast?.current?.success(`updated successful`);
+            response.status === 201 && toast?.current?.show({ severity: "success", summary: 'Success', detail: `updated successful` });
+        } catch (error) {
+            console.log(error);
+        }
 
     };
 
@@ -72,6 +87,7 @@ export function User(): JSX.Element {
         setVisible(true);
 
     };
+
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         event.preventDefault();
         const { name, value } = event.target;
@@ -88,12 +104,14 @@ export function User(): JSX.Element {
     useEffect(() => {
         if (!userContext?.user) {
             navigate('/auth');
+        }else if(userContext?.user.role === 'admin') {
+            navigate('/admin');
         }
     }, [userContext?.user]);
 
-    console.log(image);
+    // console.log(image);
     return (
-        <div className="personal-area-container full pt-3">
+        <div className="personal-area-container full py-3 ">
             <Dialog header="Upload Image" visible={visible} position={"top"} style={{ width: '450px' }} onHide={() => { if (!visible) return; setVisible(false); }} footer={footerContent} draggable={false} resizable={false}>
                 <div className='center'>
                     <FileUpload
@@ -108,38 +126,33 @@ export function User(): JSX.Element {
             <Card title="My Account" className="personal-area-card">
                 <div className="p-fluid">
                     <div className="p-field center">
-                        <Avatar className='avatar' onClick={handleEditImage} image={'https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1'} shape="circle" />
+                        <Avatar
+                            className='avatar'
+                            onClick={handleEditImage}
+                            icon={userContext?.user?.imageName ? undefined : "pi pi-user"}
+                            image={userContext?.user?.imageName ? `${appConfig.baseUrl}/images/${userContext.user.imageName}` : undefined}
+                            shape="circle" />
                     </div>
                     <div className="p-field">
-                        <label htmlFor="name">Name</label>
+                        <label htmlFor="username">Name</label>
                         <InputText
-                            id="name"
-                            name="name"
+                            id="username"
+                            name="username"
                             value={userInfo.username}
                             onChange={handleChange}
                             disabled={!isEditing}
                         />
                     </div>
-                    {/* <div className="p-field">
-                <label htmlFor="email">Email</label>
-                <InputText
-                  id="email"
-                  name="email"
-                  value={userInfo.email}
-                  onChange={handleChange}
-                  disabled={!isEditing}
-                />
-              </div> */}
-                    {/* <div className="p-field">
-                <label htmlFor="bio">Bio</label>
-                <InputText
-                  id="bio"
-                  name="bio"
-                  value={userInfo.bio}
-                  onChange={handleChange}
-                  disabled={!isEditing}
-                />
-              </div> */}
+                    <div className="p-field">
+                        <label htmlFor="email">Email</label>
+                        <InputText
+                            id="email"
+                            name="email"
+                            value={userInfo.email}
+                            onChange={handleChange}
+                            disabled={!isEditing}
+                        />
+                    </div>
                     <div className="p-field">
                         {!isEditing ? (
                             <Button label="Edit" icon="pi pi-pencil" onClick={handleEdit} />

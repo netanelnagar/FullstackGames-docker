@@ -10,13 +10,15 @@ import axios, { AxiosError } from 'axios';
 import { IUser } from '../../../Models/Models';
 import { appConfig } from '../../../config/appConfig';
 import { authContext } from '../../../Context/authContext/authContext';
+// import { Flip, Slide, Zoom } from 'react-toastify';
 
 export function Login(): JSX.Element {
 
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-
+    
     const toast = useContext(toastContext);
+    toast?.current?.show({ severity: 'success', summary: 'Success', detail: `Login attempt with: ${username}` })
 
     const userContext = useContext(authContext);
 
@@ -26,6 +28,7 @@ export function Login(): JSX.Element {
         e.preventDefault();
 
         if (!username || !password) {
+            // toast?.current?.error("Please enter both username and password.")
             toast?.current?.show({ severity: 'error', summary: 'Error', detail: 'Please enter both username and password.' })
             return;
         }
@@ -33,12 +36,16 @@ export function Login(): JSX.Element {
         try {
 
             const response = await axios.post(appConfig.login, { username: username, password: password });
-            const user: { user: IUser, token?: string } = response.data;
-            userContext?.setUser({ ...user.user, token: user.token });
+            const user: IUser = { ...response.data.user, token: response.data.token };
+            userContext?.setUser(user);
+            sessionStorage.setItem('user', JSON.stringify({ ...user, lastConnection: Date.now() }));
+            // user.token && toast?.current?.success(`Login attempt with: ${username}`)
             user.token && toast?.current?.show({ severity: 'success', summary: 'Success', detail: `Login attempt with: ${username}` })
             navigate("/GamesApp");
         } catch (error: AxiosError | any) {
-            console.log(error)
+            console.log(error);
+            // error.response.data && toast?.current?.error(`${error.response.data}`)
+
             error.response.data && toast?.current?.show({ severity: 'error', summary: 'Error', detail: `${error.response.data}` })
         }
     };

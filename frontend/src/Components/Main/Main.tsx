@@ -9,7 +9,7 @@ export function Main(): JSX.Element {
 
     console.log(userContext)
     return (
-        <div className={"Main full " }>
+        <div className={"full" }>
             <Routing />
         </div>
     );

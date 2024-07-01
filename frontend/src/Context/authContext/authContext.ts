@@ -1,14 +1,6 @@
 import { Dispatch, SetStateAction, createContext } from "react";
+import { IUser } from "../../Models/Models";
 
-interface IUser{
-    username:string;
-    memoryGame: {
-        bestTime: number;
-        updated?: string;
-    };
-    imageName?: string;
-    _id?:string;
-}
 
 //add type to user context
-export const authContext = createContext<{user: null | IUser, setUser: Dispatch<SetStateAction<object | null>>}|null>(null)
+export const authContext = createContext<{user: null | IUser, setUser: Dispatch<SetStateAction<IUser | null>>}|null>(null)

@@ -1,18 +1,22 @@
-.LayOut {}
+* {
+    font-size: 15px;
+}
 
 header {
-    height: 9%;
+    height: 10%;
     width: 100%;
 }
 
 main {
-    height: 91%;
+    height: 90%;
     width: 100%;
 }
 
-.classToast{
-    width: 23vw !important;
+ul.p-dropdown-items {
+    /* margin: 0 !important; */
+    padding-left: 0px !important;
 }
+
 
 #root {
     width: 100%;
@@ -20,13 +24,25 @@ main {
     margin: 0 auto;
 }
 
-*{
+* {
     box-sizing: border-box !important;
 }
 
 .center {
     display: flex;
     align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.flex-y {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.flex-x {
+    display: flex;
     justify-content: center;
     flex-wrap: wrap;
 }

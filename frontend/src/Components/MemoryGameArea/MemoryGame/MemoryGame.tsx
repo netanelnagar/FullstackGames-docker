@@ -1,5 +1,5 @@
 import "./MemoryGame.css";
-import { MouseEvent, useContext, useRef, useState } from "react";
+import { Dispatch, MouseEvent, SetStateAction, useContext, useEffect, useRef, useState } from "react";
 import { arrayImages, keyArrayImages } from "./images";
 import imgQ from "../../../images/download.png"
 import { PlayingCard } from "../../../Models/Models";
@@ -7,31 +7,29 @@ import _ from "lodash";
 import toastContext from "../../../Context/ToastContext/ToastContext";
 import { Dialog } from "primereact/dialog";
 import { Button } from "primereact/button";
+import { HeaderOption } from "../../Pages/MemoryGamePage";
+
+interface IPropsMemoryGame {
+    subject: HeaderOption;
+    setSubject: Dispatch<SetStateAction<HeaderOption>>;
+}
 
 
-export function MemoryGame(): JSX.Element {
+export function MemoryGame(props: IPropsMemoryGame): JSX.Element {
 
     const [arrayOfPlayingCard, setArrayOfPlayingCard] = useState<PlayingCard[]>([]);
     const [visible, setVisible] = useState<boolean>(false);
     const [timeTheGame, setTimeTheGame] = useState({
         startTime: 0, minuets: 0, seconds: 0
     });
+
     const toast = useContext(toastContext);
+
     const count = useRef<number>(0);
-    const subject = localStorage.getItem('subject') as keyArrayImages;
 
+    const { subject, setSubject } = props;
 
-    if (arrayOfPlayingCard.length === 0) {
-        const arr: PlayingCard[] = [];
-        for (let i = 0; i < 10; i++) {
-            //add win key to all the time show image
-            arr.push({ ...arrayImages[subject][i] });
-            arr.push({ ...arrayImages[subject][i] });
-        }
-        setArrayOfPlayingCard(_.shuffle(arr));
-    }
-
-
+    console.log(subject)
 
     const checkSameImages = (index: number, arr: PlayingCard[]) => {
         const imageName: string = arr[index].imageName;
@@ -41,6 +39,7 @@ export function MemoryGame(): JSX.Element {
         for (let i = 0; i < arr.length; i++) {
             if (i != index && imageName === arr[i].imageName && arr[i].watch) {
                 indexOfSameImage = i;
+                // toast?.current?.success('Is same!!!');
                 toast?.current?.show({ severity: 'success', summary: 'Bravo', detail: 'Is same!!!', life: 3000 })
                 console.log("is same!!!!!");
             }
@@ -52,22 +51,23 @@ export function MemoryGame(): JSX.Element {
             const time = (endTime - timeTheGame.startTime) / 1000;
             const minuets = Math.floor(time / 60);
             const seconds = Math.floor(time - (minuets * 60));
-            console.log(timeTheGame.startTime, endTime, time, minuets, seconds)
+            // console.log(timeTheGame.startTime, endTime, time, minuets, seconds)
             setTimeTheGame({ startTime: timeTheGame.startTime, minuets, seconds });
             setVisible(true);
+            setSubject({ name: 'persons', code: 'OPT3' })
         }
-        console.log("in finished function checkSameImages")
+        // console.log("in finished function checkSameImages")
         return indexOfSameImage;
     }
 
     const turnOverTheImages = (index: number, arr: PlayingCard[]) => {
         count.current++;
         if (count.current === 2) {
-            console.log("------------")
+            // console.log("------------")
             const indexOfSameImage = checkSameImages(index, arr);
-            console.log(indexOfSameImage ? "i finished function checkSameImages" : "aaa", indexOfSameImage);
+            // console.log(indexOfSameImage ? "i finished function checkSameImages" : "aaa", indexOfSameImage);
             setTimeout(() => {
-                console.log("i`m in timeout")
+                // console.log("i`m in timeout")
                 if (indexOfSameImage) {
                     arr[index].outTheGame = true;
                     arr[indexOfSameImage].outTheGame = true;
@@ -79,7 +79,7 @@ export function MemoryGame(): JSX.Element {
                 }
                 setArrayOfPlayingCard(_.cloneDeep(arr))
                 count.current = 0;
-                console.log("------------")
+                // console.log("------------")
             }, 1500);
         }
     }
@@ -91,13 +91,19 @@ export function MemoryGame(): JSX.Element {
     );
 
 
-    // useEffect(() => {
-    //     setTimeout(() => {
-    //     }, 3000);
-    // }, []);
-    console.log(timeTheGame)
+    useEffect(() => {
+        const arr: PlayingCard[] = [];
+        for (let i = 0; i < 10; i++) {
+            //add win key to all the time show image
+            arr.push({ ...arrayImages[subject.name as keyArrayImages][i] });
+            arr.push({ ...arrayImages[subject.name as keyArrayImages][i] });
+        }
+        setArrayOfPlayingCard(_.shuffle(arr));
+    }, [subject]);
+
+    console.log()
     return (
-        <div className="MemoryGame full row center mb-5 px-2">
+        <div className="MemoryGame full row justify-content-center mb-5 px-2">
             <Dialog visible={visible} modal header="Congratulations" footer={footerContent} style={{ width: '50vw', height: "50vh" }} onHide={() => { if (!visible) return; setVisible(false); }}>
                 <p className="m-0">
                     You win the Game!<br />

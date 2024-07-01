@@ -16,6 +16,8 @@ async function register(user: IUser) {
 
     user.role = "user";
 
+    user.blocked = false;
+
     if (user.image) {
         log.info("user uploaded image");
 

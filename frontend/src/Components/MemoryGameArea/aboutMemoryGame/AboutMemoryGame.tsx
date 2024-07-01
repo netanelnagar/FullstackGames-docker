@@ -38,7 +38,7 @@ export function AboutMemoryGame(): JSX.Element {
                             localStorage.setItem('subject', subject)
                         }}><Link to={'/memoryGame/Game'} className="full">Play</Link></button>
                         <button className="btn bg-secondary-subtle ms-1" onClick={e => { op.current?.toggle(e) }}>Setting</button>
-                        <OverlayPanel ref={op}>
+                        <OverlayPanel ref={op} >
                             <div className={" mt-1"}>
                                 <label className="text-start fw-bold">Subject of cards:</label>
                                 <select className="form-select" defaultValue={subject} onChange={(e) => {

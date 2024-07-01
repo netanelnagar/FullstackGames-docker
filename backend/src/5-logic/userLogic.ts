@@ -1,7 +1,7 @@
 import { UploadedFile } from "express-fileupload";
 import { getLogger } from "../3-middleware/winston-logger";
 import { SourceNotFoundError } from "../4-models/errorModel";
-import { IUser, updateUser, userModel } from "../4-models/userModel";
+import { IUpdateUser, IUser, userModel } from "../4-models/userModel";
 import path from "path";
 import { v4 as uuidv4 } from "uuid";
 
@@ -15,13 +15,13 @@ const log = getLogger("userLogic");
 
 async function getUsers(): Promise<IUser[]> {
 
-    const users = await userModel.find().exec();
+    const users = await userModel.find({role: "user"}).exec();
 
     const usersArray: IUser[] = users.map(user => user.toObject());
 
     for (const user of usersArray) {
         delete user.password;
-        console.log("object", user)
+        delete user.salt;
     }
 
     return usersArray;
@@ -62,14 +62,18 @@ async function updateBestTimeOfMemoryGame(newTime: { _id: string, time: number }
     return "best time no updated, it's not a best time"
 }
 
-async function updateUser(user: updateUser) {
+async function updateUser(user: IUpdateUser): Promise<IUpdateUser> {
 
     const userInDB = await userModel.findById(user._id);
 
     if (!userInDB) { throw new SourceNotFoundError("user not found "); }
 
     if (user.username) {
-        userInDB.username = user.username
+        userInDB.username = user.username;
+    }
+
+    if (user.email) {
+        userInDB.email = user.email;
     }
 
     if (user.image) {
@@ -90,14 +94,25 @@ async function updateUser(user: updateUser) {
 
     await userInDB.save()
 
+    return user;
+
+}
+
+async function deleteUser(_id: string) {
+    await userModel.findByIdAndDelete(_id);
 }
 
 
-
+async function toggleBlock(_id: string) {
+    const user = await userModel.findById(_id);
+    await userModel.findByIdAndUpdate(_id, { blocked: !user?.blocked });
+}
 
 export default {
     getUsers,
     getUser,
     updateBestTimeOfMemoryGame,
     updateUser,
+    deleteUser,
+    toggleBlock
 }

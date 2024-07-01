@@ -2,15 +2,16 @@ import { NextFunction, Request, Response, Router } from "express";
 import userLogic from "../5-logic/userLogic";
 import { verifyAdmin, verifyLogged } from "../3-middleware/verifyLogged";
 import { getLogger } from "../3-middleware/winston-logger";
-import { updateUser } from "../4-models/userModel";
+import { IUpdateUser } from "../4-models/userModel";
 
 export const router = Router();
 
 const log = getLogger("usersControllers");
 
-router.get('/users', verifyAdmin, async (req: Request, res: Response, next: NextFunction) => {
+router.get('/users',  async (req: Request, res: Response, next: NextFunction) => {
     try {
         const users = await userLogic.getUsers();
+        console.log(users)
         log.info("get all users")
         res.json(users);
     } catch (error) {
@@ -42,16 +43,42 @@ router.post('/users/memory-game/:_id', verifyLogged, async (req: Request, res: R
 });
 
 
-router.patch('/users/update', async (req: Request, res: Response, next: NextFunction) => {
+router.patch('/users/update', verifyLogged, async (req: Request, res: Response, next: NextFunction) => {
     try {
 
-        const user: updateUser = req.body;
-        await userLogic.updateUser(user);
-        res.status(201).json("Updated user");
+        const user: IUpdateUser = req.body;
+        const obj = await userLogic.updateUser(user);
+        res.status(201).json(obj);
 
     } catch (error: any) {
         next(error);
     }
 })
 
+router.patch('/users/toggle-block/:id', verifyAdmin, async (req: Request, res: Response, next: NextFunction) => {
+    try {
+
+        const _id = req.params.id;
+        await userLogic.toggleBlock(_id);
+        res.status(201);
+
+    } catch (error: any) {
+        next(error);
+    }
+})
+
+
+
+
+router.delete('/users/:id', verifyLogged, async (req: Request, res: Response, next: NextFunction) => {
+    try {
+
+        const _id = req.params.id;
+        await userLogic.deleteUser(_id);
+        res.status(200);
+
+    } catch (error: any) {
+        next(error);
+    }
+})
 export default router;

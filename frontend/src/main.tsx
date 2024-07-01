@@ -10,6 +10,7 @@ import 'primeflex/primeflex.css';
 import 'primeicons/primeicons.css';
 import 'primereact/resources/primereact.css';
 import 'primereact/resources/themes/lara-light-indigo/theme.css';
+import 'react-toastify/dist/ReactToastify.css';
 import { PrimeReactProvider } from 'primereact/api';
 import AuthContextComp from './Context/authContext/AuthContextComp.tsx';
 
@@ -24,3 +25,4 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
     </PrimeReactProvider>
   </BrowserRouter>,
 )
+

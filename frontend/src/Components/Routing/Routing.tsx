@@ -4,6 +4,7 @@ import MemoryGamePage from "../Pages/MemoryGamePage";
 import { About } from "../About/About";
 import AuthPage from "../Pages/AuthPage";
 import UserPage from "../Pages/UserPage";
+import { Admin } from "../Admin/Admin";
 
 export function Routing() {
     return (
@@ -14,6 +15,7 @@ export function Routing() {
             <Route path="/user/*" element={<UserPage />} />
             <Route path="/memoryGame/*" element={<MemoryGamePage />} />
             <Route path="/about" element={<About />} />
+            <Route path="/admin" element={<Admin />} />
         </Routes>
     );
 }

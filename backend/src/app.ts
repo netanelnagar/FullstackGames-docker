@@ -1,6 +1,6 @@
 import express from "express";
 import cors from "cors";
-import  usersRouter  from "./6-controllers/usersController";
+import usersRouter from "./6-controllers/usersController";
 import filesRouter from "./6-controllers/filesControllers";
 import authRouter from "./6-controllers/authControllers";
 import { catchAllErrors } from "./3-middleware/catchAllErrors";
@@ -23,11 +23,11 @@ log.info(
 connectToMongo();
 
 const limiter = rateLimit({
-	windowMs: 60 * 1000, // 1 minutes
-	limit: 100, // Limit each IP to 100 requests per `window` (here, per 1 minutes).
-	standardHeaders: 'draft-7', // draft-6: `RateLimit-*` headers; draft-7: combined `RateLimit` header
-	legacyHeaders: false, // Disable the `X-RateLimit-*` headers.
-	// store: ... , // Redis, Memcached, etc. See below.
+    windowMs: 60 * 1000, // 1 minutes
+    limit: 100, // Limit each IP to 100 requests per `window` (here, per 1 minutes).
+    standardHeaders: 'draft-7', // draft-6: `RateLimit-*` headers; draft-7: combined `RateLimit` header
+    legacyHeaders: false, // Disable the `X-RateLimit-*` headers.
+    // store: ... , // Redis, Memcached, etc. See below.
 })
 
 const port = process.env.PORT || 3002;
@@ -36,7 +36,7 @@ const app = express();
 
 app.use(limiter)
 
-app.use(helmet());
+app.use(helmet({ crossOriginResourcePolicy: false, }));
 
 app.use(express.json());
 
@@ -54,5 +54,5 @@ app.use('*', (req, res, next) => {
 
 app.use(catchAllErrors);
 
-app.listen(port, () => { log.info(`app listening on port ${port}`) });    
+app.listen(port, () => { log.info(`app listening on port ${port}`) });
 
