@@ -16,9 +16,9 @@ export function Login(): JSX.Element {
 
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    
+
     const toast = useContext(toastContext);
-    toast?.current?.show({ severity: 'success', summary: 'Success', detail: `Login attempt with: ${username}` })
+    // toast?.current?.show({ severity: 'success', summary: 'Success', detail: `Login attempt with: ${username}` })
 
     const userContext = useContext(authContext);
 
@@ -52,8 +52,8 @@ export function Login(): JSX.Element {
 
 
     return (
-        <div className="full d-flex justify-content-center">
-            <Card title="Login" className="shadow login-card mt-3">
+        <div className="w-100 flex justify-content-center">
+            <Card title="Login" className="shadow md:w-30rem mt-4">
                 <form onSubmit={handleLogin}>
                     <div className="mb-6">
                         <FloatLabel>
@@ -62,7 +62,7 @@ export function Login(): JSX.Element {
                                 id="username"
                                 value={username}
                                 onChange={(e) => setUsername(e.target.value)}
-                                className=" p-inputtext-lg w-100"
+                                className=" p-inputtext-lg w-full"
                             />
                         </FloatLabel>
                     </div>
@@ -75,14 +75,14 @@ export function Login(): JSX.Element {
                                 minLength={6}
                                 onChange={(e) => setPassword(e.target.value)}
                                 type='password'
-                                className=" p-inputtext-lg w-100"
+                                className=" p-inputtext-lg w-full"
                             />
                         </FloatLabel>
                     </div>
-                    <Button type="submit" label="Login" className="bt w-100" />
+                    <Button type="submit" label="Login" className="bt w-full" />
                 </form>
-                <div className="mt-6 text-center">
-                    <p>Don't have an account? <Link to="/auth/register">Register here</Link></p>
+                <div className="mt-6 text-center" >
+                    <p>Don't have an account? <Link to="/auth/register" className='text-blue-500'>Register here</Link></p>
                 </div>
             </Card>
         </div>

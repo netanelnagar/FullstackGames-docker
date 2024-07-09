@@ -23,7 +23,7 @@ export default function MemoryGamePage() {
         { name: 'vehicle', code: 'OPT3' },
     ];
     return (
-        <div className="py-2 full overflow-y-scroll">
+        <div className="w-100 pt-3">
             <div className="flex justify-content-between px-1">
                 <h5 className="center">memoryGame</h5>
                 <div className="flex justify-content-end">
@@ -34,7 +34,7 @@ export default function MemoryGamePage() {
                         onChange={onOptionChange}
                         optionLabel="name"
                         placeholder="Select an Option"
-                        className="p-ml-2"
+                        // className="p-ml-2"
                     />
                 </div>
             </div>

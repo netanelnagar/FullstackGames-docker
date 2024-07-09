@@ -4,7 +4,7 @@ import { Register } from "../authArea/register/register";
 
 export default function AuthPage() {
     return (
-        <div className="full auth-page">
+        <div className="md:mt-5 w-100 auth-page">
             {/* <h5 className="center">Login</h5>
             <hr /> */}
             <Routes>

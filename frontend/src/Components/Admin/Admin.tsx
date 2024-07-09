@@ -54,7 +54,7 @@ export function Admin(): JSX.Element {
                     <div className="flex flex-column lg:flex-row lg:align-items-center lg:justify-content-between w-10">
                         <div className="pl-4 w-6">
                             <h6>{user.username}</h6>
-                            <Button className="rounded-circle mb-3" severity="danger" tooltipOptions={{ position: "bottom" }} tooltip="delete user" name={user._id} icon="pi pi-trash" onClick={(e) => deleteUser(e, user._id)}></Button>
+                            <Button className="mb-3 rounded-circle" severity="danger" rounded tooltipOptions={{ position: "bottom" }} tooltip="delete user" name={user._id} icon="pi pi-trash" onClick={(e) => deleteUser(e, user._id)}></Button>
                         </div>
                         <div className=" flex lg:justify-content-center lg:w-6 pl-4">
                             <SelectButton className="flex" value={user.blocked ? "Block" : "Unblock"} options={['Block', 'Unblock']} onClick={(e) => toggleBlock(e, user._id)} />

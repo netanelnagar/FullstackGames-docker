@@ -64,16 +64,16 @@ export function Register(): JSX.Element {
     };
 
     return (
-        <div className="full d-flex justify-content-center overflow-y-scroll">
-            <Card title="Register" className="shadow register-card mt-3">
-                <form onSubmit={handleRegister}>
+        <div className="w-100 flex justify-content-center pb-5">
+            <Card title="Register" className="shadow md:w-30rem mt-4">
+                <form onSubmit={handleRegister} className="mb-3">
                     <div className="mb-3">
                         <label htmlFor="username" className="form-label">Username</label>
                         <InputText
                             id="username"
                             value={username}
                             onChange={(e) => setUsername(e.target.value)}
-                            className="w-100"
+                            className="w-full p-inputtext-lg"
                             required
                         />
                     </div>
@@ -84,7 +84,7 @@ export function Register(): JSX.Element {
                             value={email}
                             type='email'
                             onChange={(e) => setEmail(e.target.value)}
-                            className="w-100"
+                            className="w-full p-inputtext-lg"
                             required
                         />
                     </div>
@@ -111,10 +111,10 @@ export function Register(): JSX.Element {
                             className="form-control"
                         />
                     </div>
-                    <Button type="submit" label="Register" className="bt w-100" />
+                    <Button type="submit" label="Register" className="mt-3 w-full"  size="large"/>
                 </form>
-                <div className="mt-3 text-center">
-                    <p>Already have an account? <Link to="/auth">Login here</Link></p>
+                <div className=" text-center">
+                    <p>Already have an account? <Link to="/auth" className='text-blue-500'>Login here</Link></p>
                 </div>
             </Card>
         </div>

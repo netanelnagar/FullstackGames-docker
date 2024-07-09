@@ -102,16 +102,16 @@ export function User(): JSX.Element {
     };
 
     useEffect(() => {
-        if (!userContext?.user) {
-            navigate('/auth');
-        }else if(userContext?.user.role === 'admin') {
-            navigate('/admin');
-        }
+        // if (!userContext?.user) {
+        //     navigate('/auth');
+        // }else if(userContext?.user.role === 'admin') {
+        //     navigate('/admin');
+        // }
     }, [userContext?.user]);
 
     // console.log(image);
     return (
-        <div className="personal-area-container full py-3 ">
+        <div className="personal-area-container w-100 pt-3 md:p-5">
             <Dialog header="Upload Image" visible={visible} position={"top"} style={{ width: '450px' }} onHide={() => { if (!visible) return; setVisible(false); }} footer={footerContent} draggable={false} resizable={false}>
                 <div className='center'>
                     <FileUpload
@@ -123,7 +123,7 @@ export function User(): JSX.Element {
                     />
                 </div>
             </Dialog>
-            <Card title="My Account" className="personal-area-card">
+            <Card title="My Account" className="personal-area-card w-11 md:w-30rem  p-2">
                 <div className="p-fluid">
                     <div className="p-field center">
                         <Avatar

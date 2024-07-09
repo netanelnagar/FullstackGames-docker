@@ -29,7 +29,6 @@ export function MemoryGame(props: IPropsMemoryGame): JSX.Element {
 
     const { subject, setSubject } = props;
 
-    console.log(subject)
 
     const checkSameImages = (index: number, arr: PlayingCard[]) => {
         const imageName: string = arr[index].imageName;
@@ -101,9 +100,9 @@ export function MemoryGame(props: IPropsMemoryGame): JSX.Element {
         setArrayOfPlayingCard(_.shuffle(arr));
     }, [subject]);
 
-    console.log()
+   
     return (
-        <div className="MemoryGame full row justify-content-center mb-5 px-2">
+        <div className="MemoryGame w-100 flex justify-content-center mb-5 px-2">
             <Dialog visible={visible} modal header="Congratulations" footer={footerContent} style={{ width: '50vw', height: "50vh" }} onHide={() => { if (!visible) return; setVisible(false); }}>
                 <p className="m-0">
                     You win the Game!<br />
